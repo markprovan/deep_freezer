@@ -35,7 +35,7 @@ class DeepFreezer::Base
   private
 
     def write_to_file(yaml, file_name)
-      path = Freezer::Base.fixture_path.to_s + "/#{file_name.pluralize}.yml"
+      path = DeepFreezer::Base.fixture_path.to_s + "/#{file_name.pluralize}.yml"
       dirname = File.dirname(path)
       unless File.directory?(dirname)
         FileUtils.mkdir_p(dirname)
