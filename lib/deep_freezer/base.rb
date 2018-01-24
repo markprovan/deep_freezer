@@ -28,7 +28,7 @@ class DeepFreezer::Base
   end
 
   def self.reset!
-    path = Freezer::Base.fixture_path.to_s + "/*.yml"
+    path = DeepFreezer::Base.fixture_path.to_s + "/*.yml"
     Dir.glob(path).each { |file| File.delete(file) }
   end
 
