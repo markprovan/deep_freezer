@@ -19,7 +19,11 @@ class DeepFreezer::Base
   def freeze
     freezable = @obj.class.new
     self.class.attrs.each do |attr|
-      freezable.send("#{attr}=", @obj.send(attr))
+      if self.respond_to?(attr)
+        freezable.send("#{attr}=", self.send(attr))
+      else
+        freezable.send("#{attr}=", @obj.send(attr))
+      end
     end
 
     yaml = ({ "#{freezable.class.to_s.tableize}_#{freezable.id.to_s}" => freezable.attributes }.to_yaml).gsub("---", "")
