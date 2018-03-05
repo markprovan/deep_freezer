@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    deep_freezer (0.1.1)
+    deep_freezer (0.4.1)
 
 GEM
   remote: https://rubygems.org/
