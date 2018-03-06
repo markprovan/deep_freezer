@@ -18,7 +18,12 @@ RSpec.describe DeepFreezer::Base do
     let(:test_freezer) do
       class TestFreezer < DeepFreezer::Base
         freeze :id,
-               :name
+               :name,
+               :email
+
+        def email
+          "scrambled@itison.com"
+        end
       end
       TestFreezer
     end
@@ -32,6 +37,7 @@ RSpec.describe DeepFreezer::Base do
       instance = test_model.new
       instance.id = 1
       instance.name = "Mark"
+      instance.email = "mark.provan@itison.com"
       instance
     end
 
@@ -48,8 +54,14 @@ RSpec.describe DeepFreezer::Base do
       expect(File.exists?("/tmp/tests.yml")).to eq true
     end
 
+    it 'uses the override method, rather than original value' do
+      yaml = File.read("/tmp/tests.yml")
+      expect(yaml).to_not include("email: mark.provan@itison.com")
+      expect(yaml).to include("email: scrambled@itison.com")
+    end
+
     it 'correctly formats the YAML for each model' do
-      yaml = "\n- Test:\n    id: 1\n    name: Mark\n"
+      yaml = "\n- Test:\n    id: 1\n    name: Mark\n    email: scrambled@itison.com\n"
       expect(File.read("/tmp/tests.yml")).to eql yaml
     end
   end

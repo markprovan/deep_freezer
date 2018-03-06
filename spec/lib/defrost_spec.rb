@@ -41,7 +41,7 @@ RSpec.describe DeepFreezer::Defrost do
       # I think using NullDB affects this slightly, maybe not supporting prepared statements.
       # We can at least test for an insert into the correct table and columns.
 
-      expect(described_class.sql_for(test_instance)).to eql "INSERT INTO tests (id, name) VALUES (?, ?)"
+      expect(described_class.sql_for(test_instance)).to eql "INSERT INTO tests (id, name, email) VALUES (?, ?, ?)"
     end
   end
 end
