@@ -3,6 +3,11 @@
 
 This gem allows you to 'freeze' your ActiveRecord models to create repeatable datasets for development.
 
+---
+
+[![Maintainability](https://api.codeclimate.com/v1/badges/48d23870f47ee5a40404/maintainability)](https://codeclimate.com/github/markprovan/deep_freezer/maintainability)
+[ ![Codeship Status for markprovan/deep_freezer](https://app.codeship.com/projects/4e7228d0-0388-0136-cef4-7e35bd29612c/status?branch=master)](https://app.codeship.com/projects/280310)
+
 ## Installation
 
 Add this line to your application's Gemfile:
