@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Freeze ActiveRecord models to Rails compatible fixtures.}
   spec.description   = %q{This gem allows you to 'freeze' your ActiveRecord models to Rails compatible fixture files. This allows you to store real data statically for quick start dev/staging evironments.}
-  spec.homepage      = "https://github.com/itison/deep_freezer"
+  spec.homepage      = "https://github.com/markprovan/deep_freezer"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
