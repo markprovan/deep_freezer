@@ -1,6 +1,5 @@
 ![Logo](https://s3.amazonaws.com/mp-github-files/logo.png)
 
-# Deep Freezer v1.0.0
 ## Freeze ActiveRecord models to Rails compatible fixtures.
 
 This gem allows you to 'freeze' your ActiveRecord models to create repeatable datasets for development.
