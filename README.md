@@ -1,3 +1,5 @@
+![Logo](https://s3.amazonaws.com/mp-github-files/logo.png)
+
 # Deep Freezer v1.0.0
 ## Freeze ActiveRecord models to Rails compatible fixtures.
 
