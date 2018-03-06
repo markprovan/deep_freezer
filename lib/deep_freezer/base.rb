@@ -26,7 +26,7 @@ class DeepFreezer::Base
       end
     end
 
-    yaml = ({ "#{freezable.class.to_s.tableize}_#{freezable.id.to_s}" => freezable.attributes }.to_yaml).gsub("---", "")
+    yaml = ([{ "#{freezable.class.to_s}" => freezable.attributes }].to_yaml).gsub("---", "")
 
     write_to_file yaml, freezable.class.to_s.tableize
   end
