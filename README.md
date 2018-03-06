@@ -1,7 +1,7 @@
-# Deep Freezer
+# Deep Freezer v1.0.0
 ## Freeze ActiveRecord models to Rails compatible fixtures.
 
-This gem allows you to 'freeze' your ActiveRecord models to Rails compatible fixture files. This allows you to store real data statically for quick start dev/staging evironments.
+This gem allows you to 'freeze' your ActiveRecord models to create repeatable datasets for development.
 
 ## Installation
 
@@ -31,7 +31,7 @@ end
 
 Create an initializer and set the path for fixtures to be saved
 
-`Freezer::Base.fixture_path = Rails.root.join("test", "fixtures")`
+`Freezer::Base.fixture_path = Rails.root.join("db", "seeds")`
 
 ### Define Freezers
 
@@ -49,6 +49,26 @@ class PostFreezer < DeepFreezer::Base
 end
 ```
 
+#### Overriding Attributes
+
+Attributes can be overrode at time of freeze, similar to ActiveModel Serializers, by defining a method with the same name as the attribute name.
+
+```
+class PostFreezer < DeepFreezer::Base
+
+  freeze :id,
+         :title,
+         :body,
+         :created_at,
+         :updated_at
+
+  def title
+    "Frozen Title"
+  end
+
+end
+```
+
 ### Perform Freeze
 
 And then write a script to select and freeze the records you want:
@@ -58,7 +78,7 @@ And then write a script to select and freeze the records you want:
   posts.map { |p | PostFreezer.new(p).freeze }
 ```
 
-This will result in a `posts.yml` file in `test/fixtures` which can be loaded by running `rake db:fixtures:load`
+This will result in a `posts.yml` file in `db/seeds` which can be loaded by adding `DeepFreezer::Defrost.load!` to your `seeds.rb` file.
 
 ### Reset Fixtures
 

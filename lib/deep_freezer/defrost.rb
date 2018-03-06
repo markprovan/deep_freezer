@@ -1,26 +1,28 @@
 class DeepFreezer::Defrost
 
   def self.load!
-
     path = DeepFreezer::Base.fixture_path.join("**/*.yml")
     Dir.glob(path).each do |file|
       objects = YAML.load(File.read(file))
       puts "Loading #{objects.first.keys.first}"
-      objects.each do |o|
-
-        klass = o.keys.first
-        attrs = o[klass]
-        obj = klass.constantize.new
-
-        attrs.keys.each do |a|
-          obj.send("#{a}=", attrs[a])
-        end
-
-        sql = self.sql_for(obj)
+      objects.each do |object|
+        instance = self.hash_to_instance(object)
+        sql = self.sql_for(instance)
         ActiveRecord::Base.connection.execute sql
       end
     end
+  end
 
+  def self.hash_to_instance(object)
+    klass = object.keys.first
+    attrs = object[klass]
+    instance = klass.constantize.new
+
+    attrs.keys.each do |a|
+      instance.send("#{a}=", attrs[a])
+    end
+    
+    instance
   end
 
   def self.sql_for(record)
