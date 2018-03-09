@@ -1,7 +1,6 @@
 ![Logo](https://s3.amazonaws.com/mp-github-files/logo.png)
 
-## Freeze ActiveRecord models to Rails compatible fixtures.
-
+## Freeze production like data for development
 This gem allows you to 'freeze' your ActiveRecord models to create repeatable datasets for development.
 
 ---
