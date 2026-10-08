@@ -1,0 +1,10 @@
+.git
+.github
+.bundle
+.rspec_status
+Gemfile.lock
+coverage
+doc
+pkg
+tmp
+*.gem
