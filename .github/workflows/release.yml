@@ -16,7 +16,7 @@ jobs:
       contents: write # release-gem pushes the version tag if it is missing
       id-token: write # RubyGems trusted publishing
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.4"
