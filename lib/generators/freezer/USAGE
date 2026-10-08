@@ -1,0 +1,13 @@
+Description:
+    Creates a freezer class for a model in lib/freezers.
+
+    With no attributes, every column of the model is frozen. This needs a
+    database connection. Pass attributes to freeze only those instead.
+
+Example:
+    rails g freezer User
+    rails g freezer User name email
+    rails g freezer Admin::User
+
+    creates lib/freezers/user_freezer.rb
+    creates lib/freezers/admin/user_freezer.rb

@@ -22,25 +22,33 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install freezer
+    $ gem install deep_freezer
+
+Requires Ruby 3.1+ and ActiveRecord 7.1+.
 
 ## Usage
 
 ### Config
 Be sure to load your freezer classes in `development.rb`
 ```
-Dir.glob(Rails.root.join("lib", "freezers", "*.rb")).each do |file|
+Dir.glob(Rails.root.join("lib", "freezers", "**", "*.rb")).each do |file|
   require file
 end
 ```
 
 Create an initializer and set the path for fixtures to be saved
 
-`Freezer::Base.fixture_path = Rails.root.join("db", "seeds")`
+`DeepFreezer::Base.fixture_path = Rails.root.join("db", "seeds")`
 
 ### Define Freezers
 
-Define a `DeepFreezer` for your model
+Generate a freezer for a model:
+
+    $ rails g freezer Post
+
+This creates `lib/freezers/post_freezer.rb` with every column of the model (it needs a database connection). Pass attributes to freeze only those, for example `rails g freezer Post title body`. Namespaced models go in matching subdirectories: `rails g freezer Admin::User` creates `lib/freezers/admin/user_freezer.rb`.
+
+Or define a `DeepFreezer` for your model by hand:
 
 ```
 class PostFreezer < DeepFreezer::Base
@@ -87,7 +95,7 @@ This will result in a `posts.yml` file in `db/seeds` which can be loaded by addi
 
 ### Reset Fixtures
 
-Fixtures can be deleted manually in the directory, or by running `Freezers::Base.reset!`
+Fixtures can be deleted manually in the directory, or by running `DeepFreezer::Base.reset!`, which also clears subdirectories used by namespaced models.
 
 ## Development
 
@@ -114,4 +122,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Freezer project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/markprovan/deep_freezer/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the DeepFreezer project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/markprovan/deep_freezer/blob/master/CODE_OF_CONDUCT.md).
