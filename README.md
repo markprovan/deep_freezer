@@ -93,7 +93,16 @@ Fixtures can be deleted manually in the directory, or by running `Freezers::Base
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To install this gem onto your local machine, run `bundle exec rake install`.
+
+### Releasing
+
+Releases are published by GitHub Actions using RubyGems [trusted publishing](https://guides.rubygems.org/trusted-publishing/), so no API key is needed.
+
+1. Update `VERSION` in `lib/deep_freezer/version.rb` and add an entry to `CHANGELOG.md`.
+2. Merge to `master`, then tag and push: `git tag v2.0.0 && git push origin v2.0.0`.
+
+The `Release` workflow checks the tag matches the version, runs the specs and RuboCop, pushes the gem to [rubygems.org](https://rubygems.org) and creates a GitHub release.
 
 ## Contributing
 
