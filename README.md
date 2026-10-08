@@ -18,11 +18,15 @@ gem 'deep_freezer'
 
 And then execute:
 
-    $ bundle
+```sh
+bundle
+```
 
 Or install it yourself as:
 
-    $ gem install deep_freezer
+```sh
+gem install deep_freezer
+```
 
 Requires Ruby 3.1+ and ActiveRecord 7.1+.
 
@@ -30,7 +34,7 @@ Requires Ruby 3.1+ and ActiveRecord 7.1+.
 
 ### Config
 Be sure to load your freezer classes in `development.rb`
-```
+```ruby
 Dir.glob(Rails.root.join("lib", "freezers", "**", "*.rb")).each do |file|
   require file
 end
@@ -38,19 +42,23 @@ end
 
 Create an initializer and set the path for fixtures to be saved
 
-`DeepFreezer::Base.fixture_path = Rails.root.join("db", "seeds")`
+```ruby
+DeepFreezer::Base.fixture_path = Rails.root.join("db", "seeds")
+```
 
 ### Define Freezers
 
 Generate a freezer for a model:
 
-    $ rails g freezer Post
+```sh
+rails g freezer Post
+```
 
 This creates `lib/freezers/post_freezer.rb` with every column of the model (it needs a database connection). Pass attributes to freeze only those, for example `rails g freezer Post title body`. Namespaced models go in matching subdirectories: `rails g freezer Admin::User` creates `lib/freezers/admin/user_freezer.rb`.
 
 Or define a `DeepFreezer` for your model by hand:
 
-```
+```ruby
 class PostFreezer < DeepFreezer::Base
 
   freeze :id,
@@ -66,7 +74,7 @@ end
 
 Attributes can be overrode at time of freeze, similar to ActiveModel Serializers, by defining a method with the same name as the attribute name.
 
-```
+```ruby
 class PostFreezer < DeepFreezer::Base
 
   freeze :id,
@@ -86,7 +94,7 @@ end
 
 And then write a script to select and freeze the records you want:
 
-```
+```ruby
   posts = Post.all.limit(10)
   posts.map { |p | PostFreezer.new(p).freeze }
 ```
