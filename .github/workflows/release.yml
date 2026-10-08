@@ -14,7 +14,7 @@ jobs:
       contents: write # create the GitHub release
       id-token: write # RubyGems trusted publishing
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.4"
