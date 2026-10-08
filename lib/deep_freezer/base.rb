@@ -21,7 +21,7 @@ module DeepFreezer
     end
 
     def self.reset!
-      Dir.glob(DeepFreezer::Base.fixture_path.join("*.yml")).each { |file| File.delete(file) }
+      Dir.glob(DeepFreezer::Base.fixture_path.join("**/*.yml")).each { |file| File.delete(file) }
     end
 
     def initialize(obj)
