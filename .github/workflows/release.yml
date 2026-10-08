@@ -1,7 +1,9 @@
 name: Release
 
 # Publishes to RubyGems using trusted publishing (OIDC), so no API key is stored.
-# Trigger by pushing a tag matching the version in lib/deep_freezer/version.rb, e.g. v2.0.0.
+# Trigger by creating a release in the GitHub UI (which creates the tag) or pushing a tag
+# matching the version in lib/deep_freezer/version.rb, e.g. v2.0.0.
+# The GitHub release itself is created by hand, not by this workflow.
 on:
   push:
     tags: ["v*"]
@@ -11,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: release
     permissions:
-      contents: write # create the GitHub release
+      contents: write # release-gem pushes the version tag if it is missing
       id-token: write # RubyGems trusted publishing
     steps:
       - uses: actions/checkout@v4
@@ -31,8 +33,3 @@ jobs:
       - run: bundle exec rake
 
       - uses: rubygems/release-gem@v1
-
-      - name: Create GitHub release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" --generate-notes

@@ -100,9 +100,9 @@ To install this gem onto your local machine, run `bundle exec rake install`.
 Releases are published by GitHub Actions using RubyGems [trusted publishing](https://guides.rubygems.org/trusted-publishing/), so no API key is needed.
 
 1. Update `VERSION` in `lib/deep_freezer/version.rb` and add an entry to `CHANGELOG.md`.
-2. Merge to `master`, then tag and push: `git tag v2.0.0 && git push origin v2.0.0`.
+2. Merge to `master`, then create a release in the GitHub UI with a new tag (e.g. `v2.0.0`) targeting `master`.
 
-The `Release` workflow checks the tag matches the version, runs the specs and RuboCop, pushes the gem to [rubygems.org](https://rubygems.org) and creates a GitHub release.
+The `Release` workflow checks the tag matches the version, runs the specs and RuboCop, and pushes the gem to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 
