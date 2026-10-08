@@ -111,6 +111,25 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 
 To install this gem onto your local machine, run `bundle exec rake install`.
 
+### Docker
+
+A development image is provided so you don't need Ruby installed locally:
+
+```sh
+docker build -t deep_freezer-dev .
+docker run --rm -v "$PWD":/app deep_freezer-dev                          # specs and RuboCop
+docker run --rm -it -v "$PWD":/app deep_freezer-dev bundle exec rspec    # specs only
+docker run --rm -it -v "$PWD":/app deep_freezer-dev bin/console          # console
+```
+
+Test against another Ruby or Rails release with build arguments, matching the CI matrix:
+
+```sh
+docker build -t deep_freezer-dev --build-arg RUBY_VERSION=3.2 --build-arg ACTIVERECORD_VERSION=7.1 .
+```
+
+On Linux, files the container writes to your checkout (`Gemfile.lock`, `.rspec_status`) are owned by root. Both are gitignored.
+
 ### Releasing
 
 Releases are published by GitHub Actions using RubyGems [trusted publishing](https://guides.rubygems.org/trusted-publishing/), so no API key is needed.
