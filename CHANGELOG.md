@@ -1,7 +1,9 @@
 # Changelog
 
-## Unreleased
+## 2.1.0
 
+- Add a Rails generator: `rails g freezer User` creates `lib/freezers/user_freezer.rb` with every column of the model, or only the attributes passed. Namespaced models go in matching subdirectories.
+- Fix stale names and links in the README.
 - `Base.reset!` now removes fixtures in subdirectories, so namespaced models (e.g. `Foo::Bar` in `foo/bars.yml`) are cleared too.
 
 ## 2.0.0

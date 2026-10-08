@@ -20,12 +20,13 @@ Gem::Specification.new do |spec|
   spec.metadata["source_code_uri"]       = spec.homepage
   spec.metadata["rubygems_mfa_required"] = "true"
 
-  spec.files         = Dir["lib/**/*.rb", "LICENSE.txt", "README.md"]
+  spec.files         = Dir["lib/**/*"].select { |f| File.file?(f) } + ["LICENSE.txt", "README.md"]
   spec.require_paths = ["lib"]
 
   spec.add_dependency "activerecord", ">= 7.1", "< 9.0"
 
   spec.add_development_dependency "irb"
+  spec.add_development_dependency "railties", ">= 7.1"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.13"
   spec.add_development_dependency "rubocop", "~> 1.70"

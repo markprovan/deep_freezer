@@ -9,6 +9,7 @@ ActiveRecord::Schema.verbose = false
 load File.expand_path("support/db/schema.rb", __dir__)
 
 class Test < ActiveRecord::Base; end
+class Widget < ActiveRecord::Base; end
 
 RSpec.configure do |config|
   config.example_status_persistence_file_path = ".rspec_status"
