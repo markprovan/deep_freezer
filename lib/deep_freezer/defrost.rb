@@ -1,42 +1,40 @@
-class DeepFreezer::Defrost
+# frozen_string_literal: true
 
-  def self.load!
-    path = DeepFreezer::Base.fixture_path.join("**/*.yml")
-    Dir.glob(path).each do |file|
-      objects = YAML.load(File.read(file))
-      puts "Loading #{objects.first.keys.first}"
-      objects.each do |object|
-        instance = self.hash_to_instance(object)
-        sql = self.sql_for(instance)
-        ActiveRecord::Base.connection.execute sql
+module DeepFreezer
+  class Defrost
+    PERMITTED_YAML_CLASSES = [Date, Time, Symbol, BigDecimal].freeze
+
+    def self.load!
+      Dir.glob(DeepFreezer::Base.fixture_path.join("**/*.yml")).each do |file|
+        objects = YAML.safe_load_file(file, permitted_classes: PERMITTED_YAML_CLASSES, aliases: true)
+        next if objects.blank?
+
+        puts "Loading #{objects.first.keys.first}"
+        objects.each do |object|
+          ActiveRecord::Base.connection.execute sql_for(hash_to_instance(object))
+        end
       end
     end
-  end
 
-  def self.hash_to_instance(object)
-    klass = object.keys.first
-    attrs = object[klass]
-    instance = klass.constantize.new
+    def self.hash_to_instance(object)
+      klass, attrs = object.first
+      instance = klass.constantize.new
 
-    attrs.keys.each do |a|
-      instance.send("#{a}=", attrs[a])
+      attrs.each { |name, value| instance.public_send("#{name}=", value) }
+
+      instance
     end
-    
-    instance
-  end
 
-  def self.sql_for(record)
-    values = record.send(:arel_attributes_with_values_for_create, record.attribute_names)
+    def self.sql_for(record)
+      model = record.class
+      table = model.arel_table
 
-    model = record.class
-    scope = model.unscoped
+      values = record.attributes_for_database.map { |name, value| [table[name], value] }
 
-    im = scope.arel.create_insert
-    im.into model.arel_table
+      insert = Arel::InsertManager.new(table)
+      insert.insert(values)
 
-    substitutes, binds = scope.substitute_values(values)
-    im.insert substitutes
-
-    record.class.connection.to_sql(im, binds)
+      model.connection.to_sql(insert)
+    end
   end
 end

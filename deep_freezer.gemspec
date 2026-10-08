@@ -1,7 +1,6 @@
+# frozen_string_literal: true
 
-lib = File.expand_path("../lib", __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "deep_freezer/version"
+require_relative "lib/deep_freezer/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "deep_freezer"
@@ -9,32 +8,26 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Mark Provan"]
   spec.email         = ["markgprovan@gmail.com"]
 
-  spec.summary       = %q{Freeze ActiveRecord models to Rails compatible fixtures.}
-  spec.description   = %q{This gem allows you to 'freeze' your ActiveRecord models to Rails compatible fixture files. This allows you to store real data statically for quick start dev/staging evironments.}
+  spec.summary       = "Freeze ActiveRecord models to Rails compatible fixtures."
+  spec.description   = "This gem allows you to 'freeze' your ActiveRecord models to Rails compatible fixture files. This allows you to store real data statically for quick start dev/staging environments."
   spec.homepage      = "https://github.com/markprovan/deep_freezer"
   spec.license       = "MIT"
 
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
-  # to allow pushing to a single host or delete this section to allow pushing to any host.
-  if spec.respond_to?(:metadata)
-    spec.metadata["allowed_push_host"] = "https://rubygems.org"
-  else
-    raise "RubyGems 2.0 or newer is required to protect against " \
-      "public gem pushes."
-  end
+  spec.required_ruby_version = ">= 3.1"
 
-  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test|spec|features)/})
-  end
-  spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.metadata["allowed_push_host"]     = "https://rubygems.org"
+  spec.metadata["homepage_uri"]          = spec.homepage
+  spec.metadata["source_code_uri"]       = spec.homepage
+  spec.metadata["rubygems_mfa_required"] = "true"
+
+  spec.files         = Dir["lib/**/*.rb", "LICENSE.txt", "README.md"]
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "activerecord", "> 4.2.10", "< 6.0.0"
+  spec.add_dependency "activerecord", ">= 7.1", "< 9.0"
 
-  spec.add_development_dependency "bundler", "~> 1.16"
-  spec.add_development_dependency "pry"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "activerecord-nulldb-adapter"
+  spec.add_development_dependency "irb"
+  spec.add_development_dependency "rake", "~> 13.0"
+  spec.add_development_dependency "rspec", "~> 3.13"
+  spec.add_development_dependency "rubocop", "~> 1.70"
+  spec.add_development_dependency "sqlite3", ">= 2.1"
 end

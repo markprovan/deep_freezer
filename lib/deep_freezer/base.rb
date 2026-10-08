@@ -1,50 +1,52 @@
-class DeepFreezer::Base
+# frozen_string_literal: true
 
-  class << self
-    attr_accessor :attrs, :model, :fixture_path
-  end
+module DeepFreezer
+  class Base
+    class << self
+      attr_reader :attrs, :fixture_path
 
-  def initialize(obj)
-    @obj = obj
-  end
-
-  def self.freeze(*attrs)
-    @attrs = attrs
-  end
-
-  def self.model(model)
-    @model = model
-  end
-
-  def freeze
-    freezable = @obj.class.new
-    self.class.attrs.each do |attr|
-      if self.respond_to?(attr)
-        freezable.send("#{attr}=", self.send(attr))
-      else
-        freezable.send("#{attr}=", @obj.send(attr))
+      def fixture_path=(path)
+        @fixture_path = path && Pathname.new(path)
       end
     end
 
-    yaml = ([{ "#{freezable.class.to_s}" => freezable.attributes }].to_yaml).gsub("---", "")
+    def self.freeze(*attrs)
+      @attrs = attrs
+    end
 
-    write_to_file yaml, freezable.class.to_s.tableize
-  end
+    # With an argument, sets the model; without, returns it.
+    def self.model(model = nil)
+      @model = model if model
+      @model
+    end
 
-  def self.reset!
-    path = DeepFreezer::Base.fixture_path.to_s + "/*.yml"
-    Dir.glob(path).each { |file| File.delete(file) }
-  end
+    def self.reset!
+      Dir.glob(DeepFreezer::Base.fixture_path.join("*.yml")).each { |file| File.delete(file) }
+    end
 
-  private
+    def initialize(obj)
+      @obj = obj
+    end
+
+    def freeze
+      freezable = @obj.class.new
+      self.class.attrs.each do |attr|
+        value = respond_to?(attr) ? public_send(attr) : @obj.public_send(attr)
+        freezable.public_send("#{attr}=", value)
+      end
+
+      # Drop only the leading document marker, so values containing "---" survive.
+      yaml = [{ freezable.class.to_s => freezable.attributes }].to_yaml.delete_prefix("---")
+
+      write_to_file yaml, freezable.class.to_s.tableize
+    end
+
+    private
 
     def write_to_file(yaml, file_name)
-      path = DeepFreezer::Base.fixture_path.to_s + "/#{file_name.pluralize}.yml"
-      dirname = File.dirname(path)
-      unless File.directory?(dirname)
-        FileUtils.mkdir_p(dirname)
-      end
-
-      open(path, 'a+') { |file| file << yaml }
+      path = DeepFreezer::Base.fixture_path.join("#{file_name.pluralize}.yml")
+      FileUtils.mkdir_p(path.dirname)
+      File.open(path, "a") { |file| file << yaml }
     end
+  end
 end
