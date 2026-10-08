@@ -53,5 +53,15 @@ RSpec.describe DeepFreezer::Base do
       described_class.reset!
       expect(fixture).not_to exist
     end
+
+    it "removes fixtures in subdirectories on reset!" do
+      nested = DeepFreezer::Base.fixture_path.join("foo", "bars.yml")
+      nested.dirname.mkpath
+      nested.write("- Foo::Bar: {}\n")
+
+      described_class.reset!
+
+      expect(nested).not_to exist
+    end
   end
 end

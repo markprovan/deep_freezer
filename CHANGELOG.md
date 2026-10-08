@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- `Base.reset!` now removes fixtures in subdirectories, so namespaced models (e.g. `Foo::Bar` in `foo/bars.yml`) are cleared too.
+
 ## 2.0.0
 
 - Require Ruby >= 3.1 and ActiveRecord >= 7.1, < 9.0.
