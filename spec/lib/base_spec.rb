@@ -14,6 +14,11 @@ RSpec.describe DeepFreezer::Base do
   describe "API" do
     it { expect(described_class).to respond_to(:reset!) }
     it { expect(described_class).to respond_to(:freeze) }
+
+    it "sets and returns the model" do
+      freezer = Class.new(described_class) { model Test }
+      expect(freezer.model).to eq Test
+    end
   end
 
   describe "YAML Output" do

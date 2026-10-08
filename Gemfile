@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 source "https://rubygems.org"
 
-git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
-
-# Specify your gem's dependencies in deep_freezer.gemspec
 gemspec
+
+# CI sets ACTIVERECORD_VERSION (e.g. "7.2") to test against a specific release.
+gem "activerecord", "~> #{ENV.fetch("ACTIVERECORD_VERSION")}.0" if ENV["ACTIVERECORD_VERSION"]

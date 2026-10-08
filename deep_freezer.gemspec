@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 require_relative "lib/deep_freezer/version"
 
@@ -27,5 +28,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "irb"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.13"
+  spec.add_development_dependency "rubocop", "~> 1.70"
   spec.add_development_dependency "sqlite3", ">= 2.1"
 end
