@@ -1,68 +1,52 @@
-require 'spec_helper'
-require 'active_record'
-require 'nulldb_rspec'
+# frozen_string_literal: true
+
+require "spec_helper"
+
+class TestFreezer < DeepFreezer::Base
+  freeze :id, :name, :email
+
+  def email
+    "scrambled@itison.com"
+  end
+end
 
 RSpec.describe DeepFreezer::Base do
-
-  describe 'API' do
-    it "responds to reset!" do
-      expect(described_class.respond_to?(:reset!)).to eq true
-    end
-
-    it "responds to freeze" do
-      expect(described_class.respond_to?(:freeze)).to eq true
-    end
+  describe "API" do
+    it { expect(described_class).to respond_to(:reset!) }
+    it { expect(described_class).to respond_to(:freeze) }
   end
 
-  describe 'YAML Output' do
-    let(:test_freezer) do
-      class TestFreezer < DeepFreezer::Base
-        freeze :id,
-               :name,
-               :email
+  describe "YAML Output" do
+    let(:fixture) { DeepFreezer::Base.fixture_path.join("tests.yml") }
 
-        def email
-          "scrambled@itison.com"
-        end
-      end
-      TestFreezer
+    let(:test_instance) do
+      Test.new(id: 1, name: "Mark", email: "mark.provan@itison.com")
     end
 
-    let(:test_model) do
-      class Test < ActiveRecord::Base;end
-      Test
+    before { TestFreezer.new(test_instance).freeze }
+
+    it "creates a file for output based on the model name" do
+      expect(fixture).to exist
     end
 
-    let(:test_instance) do 
-      instance = test_model.new
-      instance.id = 1
-      instance.name = "Mark"
-      instance.email = "mark.provan@itison.com"
-      instance
-    end
-
-    before do
-      DeepFreezer::Base.fixture_path = File.join("/tmp")
-      NullDB.configure {|ndb| def ndb.project_root;File.join("spec", "support");end}
-      ActiveRecord::Base.establish_connection(adapter: :nulldb)
-      DeepFreezer::Base.reset!
-
-      test_freezer.new(test_instance).freeze
-    end
-
-    it 'creates a file for output based on the model name' do
-      expect(File.exists?("/tmp/tests.yml")).to eq true
-    end
-
-    it 'uses the override method, rather than original value' do
-      yaml = File.read("/tmp/tests.yml")
-      expect(yaml).to_not include("email: mark.provan@itison.com")
+    it "uses the override method, rather than original value" do
+      yaml = fixture.read
+      expect(yaml).not_to include("email: mark.provan@itison.com")
       expect(yaml).to include("email: scrambled@itison.com")
     end
 
-    it 'correctly formats the YAML for each model' do
-      yaml = "\n- Test:\n    id: 1\n    name: Mark\n    email: scrambled@itison.com\n"
-      expect(File.read("/tmp/tests.yml")).to eql yaml
+    it "correctly formats the YAML for each model" do
+      expect(fixture.read).to eql "\n- Test:\n    id: 1\n    name: Mark\n    email: scrambled@itison.com\n"
+    end
+
+    it "preserves '---' inside values" do
+      TestFreezer.new(Test.new(id: 2, name: "a --- b")).freeze
+      expect(fixture.read).to include("a --- b")
+    end
+
+    it "removes fixture files on reset!" do
+      described_class.reset!
+      expect(fixture).not_to exist
     end
   end
 end

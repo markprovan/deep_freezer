@@ -6,7 +6,7 @@ This gem allows you to 'freeze' your ActiveRecord models to create repeatable da
 ---
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/48d23870f47ee5a40404/maintainability)](https://codeclimate.com/github/markprovan/deep_freezer/maintainability)
-[ ![Codeship Status for markprovan/deep_freezer](https://app.codeship.com/projects/4e7228d0-0388-0136-cef4-7e35bd29612c/status?branch=master)](https://app.codeship.com/projects/280310)
+[![CI](https://github.com/markprovan/deep_freezer/actions/workflows/ci.yml/badge.svg)](https://github.com/markprovan/deep_freezer/actions/workflows/ci.yml)
 
 ## Installation
 

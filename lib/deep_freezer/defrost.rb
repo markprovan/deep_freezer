@@ -1,42 +1,38 @@
+# frozen_string_literal: true
+
 class DeepFreezer::Defrost
+  PERMITTED_YAML_CLASSES = [Date, Time, Symbol, BigDecimal].freeze
 
   def self.load!
-    path = DeepFreezer::Base.fixture_path.join("**/*.yml")
-    Dir.glob(path).each do |file|
-      objects = YAML.load(File.read(file))
+    Dir.glob(DeepFreezer::Base.fixture_path.join("**/*.yml")).sort.each do |file|
+      objects = YAML.safe_load_file(file, permitted_classes: PERMITTED_YAML_CLASSES, aliases: true)
+      next if objects.blank?
+
       puts "Loading #{objects.first.keys.first}"
       objects.each do |object|
-        instance = self.hash_to_instance(object)
-        sql = self.sql_for(instance)
-        ActiveRecord::Base.connection.execute sql
+        ActiveRecord::Base.connection.execute sql_for(hash_to_instance(object))
       end
     end
   end
 
   def self.hash_to_instance(object)
-    klass = object.keys.first
-    attrs = object[klass]
+    klass, attrs = object.first
     instance = klass.constantize.new
 
-    attrs.keys.each do |a|
-      instance.send("#{a}=", attrs[a])
-    end
-    
+    attrs.each { |name, value| instance.public_send("#{name}=", value) }
+
     instance
   end
 
   def self.sql_for(record)
-    values = record.send(:arel_attributes_with_values_for_create, record.attribute_names)
-
     model = record.class
-    scope = model.unscoped
+    table = model.arel_table
 
-    im = scope.arel.create_insert
-    im.into model.arel_table
+    values = record.attributes_for_database.map { |name, value| [table[name], value] }
 
-    substitutes, binds = scope.substitute_values(values)
-    im.insert substitutes
+    insert = Arel::InsertManager.new(table)
+    insert.insert(values)
 
-    record.class.connection.to_sql(im, binds)
+    model.connection.to_sql(insert)
   end
 end
