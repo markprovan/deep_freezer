@@ -30,7 +30,7 @@ jobs:
     name: Ruby ${{ matrix.ruby }} / ActiveRecord ${{ matrix.activerecord }}
     strategy:
       fail-fast: false
-      # Oldest and newest of each, paired so every Ruby and ActiveRecord release is covered.
+      # Pairs chosen so each Ruby (3.1-3.4) and ActiveRecord (7.1-8.1) release appears once.
       # ActiveRecord 8.0+ requires Ruby >= 3.2.
       matrix:
         include:
